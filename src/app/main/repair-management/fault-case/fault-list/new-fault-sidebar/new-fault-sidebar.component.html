@@ -1,0 +1,232 @@
+<div class="slideout-content">
+    <!-- Modal to add new user starts-->
+    <div class="modalsd modal-slide-in sdfade new-user-modal" id="modals-slide-in">
+        <div class="modal-dialog">
+            <form class="add-new-user modal-content pt-0" (ngSubmit)="(newCaseForm.form.valid)" #newCaseForm="ngForm">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="toggleSidebar('new-user-sidebar')">
+                    ×
+                </button>
+                <div class="modal-header mb-1">
+                    <h5 class="modal-title" id="exampleModalLabel">New Fault Case</h5>
+                </div>
+                <div class="modal-body flex-grow-1">
+                    <div class="form-group">
+                        <label for="serialNumber">Serial Number</label>
+                        <input type="text" [(ngModel)]="repairDevice.serialNumber" class="form-control" [ngClass]="{
+                                                              'is-valid': contractCheckValidation.isValid == 1,
+                                                              'is-invalid': contractCheckValidation.isValid == 2
+                                                            }" name="serialNumber" placeholder="Enter Serial Number"
+                            (keyup)="onSerialNumberEvent($event)" required />
+                        <div class="valid-feedback">{{contractCheckValidation.message}}</div>
+                        <div class="invalid-feedback">{{contractCheckValidation.message}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="assetCode">Asset Code</label>
+                        <input type="text" [(ngModel)]="repairDevice.assetCode" class="form-control" name="assetCode"
+                            placeholder="Enter Asset Code" />
+                    </div>
+                    <div class="form-group">
+                        <label for="deviceModel">Device Model</label>
+                        <input type="text" [(ngModel)]="repairDevice.deviceModel" class="form-control"
+                            name="deviceModel" placeholder="Enter Product Code" disabled />
+                        <!-- <select class="form-control" [(ngModel)]="repairDevice.deviceModel" name="deviceModel">
+                            <option>Zebra TC56</option>
+                            <option>Zebra TC77</option>
+                            <option>QLN420</option>
+                        </select> -->
+                    </div>
+                    <div class="form-group">
+                        <label for="emailDate">Email Date</label>
+                        <div class="input-group">
+
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="Email Date Picker"
+                                [(ngModel)]="emailDPdata" ngbDatepicker #emailDP="ngbDatepicker" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary feather icon-calendar"
+                                    (click)="emailDP.toggle()" type="button" rippleEffect></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="collectionDate">Collection Date</label>
+                        <div class="input-group">
+
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="Collection Date Picker"
+                                [(ngModel)]="collectionDPdata" ngbDatepicker #collectionDP="ngbDatepicker" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary feather icon-calendar"
+                                    (click)="collectionDP.toggle()" type="button" rippleEffect></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="customer">Customer</label>
+                        <select [(ngModel)]="repairDevice.customer" class="form-control" name="customer">
+
+                            <option [ngValue]="category" *ngFor="let category of uniqueCustomerCodes">{{category}}
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="faultDescription">Fault Description</label>
+                        <input type="text" [(ngModel)]="repairDevice.faultDescription" class="form-control"
+                            name="faultDescription" placeholder="Enter description given by customer" />
+                    </div>
+
+                    <div class="form-group custom-control custom-switch custom-switch-success">
+                        <p class="mb-50">Repaired By Us</p>
+                        <input type="checkbox" [(ngModel)]="repairDevice.repairedByUs" class="custom-control-input"
+                            id="isReparedByUsSwitch" name="isReparedByUsSwitch" checked />
+                        <label class="custom-control-label" for="isReparedByUsSwitch">
+                            <span class="switch-icon-left"><i data-feather="check"></i></span>
+                            <span class="switch-icon-right"><i data-feather="x"></i></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group" *ngIf="!repairDevice.repairedByUs">
+                        <label for="faultCategory">Fault Category</label>
+
+                        <select class="form-control" [(ngModel)]="repairDevice.rmaFaultCategory" name="faultCategory">
+                            <option disabled [ngValue]="null">-/-</option>
+                            <option [ngValue]="category.title"
+                                *ngFor="let category of rmaFaultSelectionService.mainGroups">{{category.title}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group" *ngIf="!repairDevice.repairedByUs">
+                        <label for="faultSubCategory">Fault Sub-Category</label>
+
+                        <select class="form-control" [(ngModel)]="repairDevice.rmaFaultSubCategory"
+                            name="faultSubCategory">
+                            <option [ngValue]="subcategory.title"
+                                *ngFor="let subcategory of filterSubById(repairDevice.rmaFaultCategory)">
+                                {{subcategory.title}}
+                            </option>
+                        </select>
+
+                    </div>
+                    <div class="form-group" *ngIf="!repairDevice.repairedByUs">
+                        <label for="basicInput">RMA Fault Description</label>
+                        <input type="text" [(ngModel)]="repairDevice.rmaFaultDescription" class="form-control"
+                            name="basicInput" placeholder="Enter description for RMA" />
+                    </div>
+                    <div class="form-group custom-control custom-switch custom-switch-success">
+                        <p class="mb-50">Serial Correct?</p>
+                        <input type="checkbox" [(ngModel)]="repairDevice.serialCorrect" class="custom-control-input"
+                            name="isSerialCorrectSwitch" id="isSerialCorrectSwitch" checked />
+                        <label class="custom-control-label" for="isSerialCorrectSwitch">
+                            <span class="switch-icon-left"><i data-feather="check"></i></span>
+                            <span class="switch-icon-right"><i data-feather="x"></i></span>
+                        </label>
+                    </div>
+                    <div class="form-group" *ngIf="!repairDevice.serialCorrect">
+                        <label for="correctSerialNumber">Correct Serial Number</label>
+                        <input type="text" class="form-control" name="correctSerialNumber"
+                            placeholder="Enter Correct Serial Number" />
+                    </div>
+                    <div class="form-group custom-control custom-switch custom-switch-success">
+                        <p class="mb-50">Asset Correct?</p>
+                        <input type="checkbox" [(ngModel)]="repairDevice.assetCorrect" class="custom-control-input"
+                            name="isAssetCorrectSwitch" id="isAssetCorrectSwitch" checked />
+                        <label class="custom-control-label" for="isAssetCorrectSwitch">
+                            <span class="switch-icon-left"><i data-feather="check"></i></span>
+                            <span class="switch-icon-right"><i data-feather="x"></i></span>
+                        </label>
+                    </div>
+                    <div class="form-group" *ngIf="!repairDevice.assetCorrect">
+                        <label for="correctAssetCode">Correct Asset Code</label>
+                        <input type="text" [(ngModel)]="repairDevice.correctAssetCode" class="form-control"
+                            name="correctAssetCode" placeholder="Enter Correct Asset Code" />
+                    </div>
+                    <div class="form-group custom-control custom-switch custom-switch-success">
+                        <p class="mb-50">Is Replacement Given?</p>
+                        <!-- <label for="customSwitch113">Is Replacement? </label> -->
+                        <input type="checkbox" [(ngModel)]="repairDevice.replacement" class="custom-control-input"
+                            id="isReplacementSwitch" name="isReplacementSwitch" />
+                        <label class="custom-control-label" for="isReplacementSwitch">
+                            <span class="switch-icon-left"><i data-feather="check"></i></span>
+                            <span class="switch-icon-right"><i data-feather="x"></i></span>
+                        </label>
+                    </div>
+                    <div class="form-group custom-control custom-switch custom-switch-success"
+                        *ngIf="repairDevice.replacement">
+                        <p class="mb-50">Is Replacement by Zebra?</p>
+                        <!-- <label for="customSwitch113">Is Replacement? </label> -->
+                        <input type="checkbox" [(ngModel)]="repairDevice.replacementByZebra"
+                            class="custom-control-input" id="isReplacementZebraSwitch"
+                            name="isReplacementZebraSwitch" />
+                        <label class="custom-control-label" for="isReplacementZebraSwitch">
+                            <span class="switch-icon-left"><i data-feather="check"></i></span>
+                            <span class="switch-icon-right"><i data-feather="x"></i></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group" *ngIf="repairDevice.replacementByZebra">
+                        <label for="replacementSerial">Replacement Serial Number</label>
+                        <input type="text" [(ngModel)]="repairDevice.replacementSerialNo" class="form-control"
+                            name="replacementSerial" placeholder="Enter Replacement Serial Number" />
+                    </div>
+
+                    <div class="form-group custom-control custom-switch custom-switch-success"
+                        *ngIf="repairDevice.replacement">
+                        <p class="mb-50">Is Replacement by MGC?</p>
+                        <!-- <label for="customSwitch113">Is Replacement? </label> -->
+                        <input type="checkbox" [(ngModel)]="repairDevice.replacementByUs" class="custom-control-input"
+                            id="isReplacementByUsSwitch" name="isReplacementByUsSwitch" />
+                        <label class="custom-control-label" for="isReplacementByUsSwitch">
+                            <span class="switch-icon-left"><i data-feather="check"></i></span>
+                            <span class="switch-icon-right"><i data-feather="x"></i></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group" *ngIf="repairDevice.replacementByUs">
+                        <label for="replacementSerial">Replacement Serial Number</label>
+                        <input type="text" [(ngModel)]="repairDevice.replacementSerialNoByUs" class="form-control"
+                            name="replacementSerial" placeholder="Enter Replacement Serial Number" />
+                    </div>
+
+                    <div class="form-group" *ngIf="!repairDevice.repairedByUs">
+                        <label for="rmaNumber">RMA Number</label>
+                        <input type="text" [(ngModel)]="repairDevice.rmaNumber" class="form-control" name="rmaNumber"
+                            placeholder="Enter RMA Number" />
+                    </div>
+                    <div class="form-group custom-control custom-switch custom-switch-success">
+                        <!-- <p class="mb-50">Customer Note</p> -->
+                        <label for="customerNotes">Customer Note</label>
+                        <fieldset class="form-group">
+                            <textarea class="form-control" [(ngModel)]="repairDevice.customerNote" name="customerNotes"
+                                rows="3" placeholder="Customer notes goes here"></textarea>
+                        </fieldset>
+                    </div>
+                    <div class="form-group custom-control custom-switch custom-switch-success">
+                        <!-- <p class="mb-50">Accessory Note</p> -->
+                        <label for="accessoryNotes">Accessory Note</label>
+                        <fieldset class="form-group">
+                            <textarea class="form-control" [(ngModel)]="repairDevice.accessoryNote"
+                                name="accessoryNotes" rows="3" placeholder="Accessory notes goes here"></textarea>
+                        </fieldset>
+                    </div>
+                    <div class="form-group custom-control custom-switch custom-switch-success">
+                        <!-- <p class="mb-50">Additional Note</p> -->
+                        <label for="additionalNotes">Additional Note</label>
+                        <fieldset class="form-group">
+                            <textarea class="form-control" [(ngModel)]="repairDevice.extraNotes" name="additionalNotes"
+                                rows="3" placeholder="Additional notes goes here"></textarea>
+                        </fieldset>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mr-1" (click)="submit(newCaseForm)"
+                        rippleEffect>Submit</button>
+                    <button type="reset" class="btn btn-outline-secondary" (click)="toggleSidebar('new-user-sidebar')"
+                        rippleEffect>
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal to add new user Ends-->
+</div>

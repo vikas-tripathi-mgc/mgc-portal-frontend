@@ -1,0 +1,329 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <section class="invoice-add-wrapper">
+            <div class="row invoice-add">
+                <!-- Invoice Add Left starts -->
+                <div class="col-xl-9 col-md-8 col-12">
+                    <div class="card invoice-preview-card">
+                        <!-- Header starts -->
+                        <div class="card-body invoice-padding pb-0">
+                            <div class="d-flex justify-content-between flex-md-row flex-column invoice-spacing mt-0">
+                                <div>
+
+                                    <div class="logo-wrapper brand-logo">
+
+
+                                        <img src="assets/images/logo/logo.png" height="50" width="75" alt="Logo" />
+                                        <h3 class="text-secondary ml-1 ">MENA GALAXY COMPUTERS L.L.C
+                                        </h3>
+
+                                    </div>
+                                    <p class="card-text mb-25">Office 204, Al Ansari Building, 24 A Street </p>
+                                    <p class="card-text mb-25">Behind EPPCO Auto Centre - Dubai</p>
+                                    <p class="card-text mb-0">Phone: +971 42564630</p>
+                                </div>
+                                <div class="invoice-number-date mt-md-0 mt-2">
+                                    <div class="d-flex align-items-center justify-content-md-end mb-1">
+                                        <span class="title">Reference:</span>
+                                        <div *ngIf="readyToDeliver != null"
+                                            class="input-group input-group-merge invoice-edit-input-group disabled">
+                                            <!-- <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i data-feather="hash"></i>
+                                                </div>
+                                            </div> -->
+                                            <input type="text" class="form-control invoice-edit-input"
+                                                [(ngModel)]="readyToDeliver.id" placeholder="0" />
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span class="title">Date:</span>
+                                        <ng2-flatpickr [config]="dateOptions" name="Date"></ng2-flatpickr>
+                                    </div>
+                                    <!-- <div class="d-flex align-items-center">
+                                        <span class="title">Due Date:</span>
+                                        <ng2-flatpickr [config]="dueDateOptions" name="due-date"></ng2-flatpickr>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Header ends -->
+
+                        <hr class="invoice-spacing" />
+
+                        <!-- Address and Contact starts -->
+                        <div class="card-body invoice-padding pt-0">
+                            <div class="row row-bill-to invoice-spacing">
+                                <div class="col-xl-8 mb-lg-1 col-bill-to pl-0">
+                                    <h6 class="invoice-to-title">Deliver To:</h6>
+                                    <div class="invoice-customer">
+                                        <!-- <ng-select [items]="invoiceSelect" bindLabel="companyName"
+                                            bindValue="customerCodesData" [(ngModel)]="invoiceSelected"
+                                            name="invoiceSelect" #select>
+                                            
+
+                                            <ng-template ng-option-tmp let-item="customerCodesData">
+                                                {{ item.companyName }}
+                                            </ng-template>
+                                        </ng-select> -->
+
+                                        <select [(ngModel)]="selectedCustomer" class="form-control" name="customer"
+                                            (click)="getReadyForDeliverItems()">
+
+                                            <option [ngValue]="customer" *ngFor="let customer of customerListData">
+                                                {{customer.customerName}} - {{customer.companyName}}
+                                            </option>
+
+                                        </select>
+                                        <div class="customer-details mt-1">
+                                            <p class="mb-25 font-weight-bolder">{{ selectedCustomer?.customerName }}</p>
+                                            <p class="mb-25">{{ selectedCustomer?.companyName }}</p>
+                                            <p class="mb-25">{{ selectedCustomer?.deliveryAddressLine1 }}</p>
+                                            <p class="mb-25">{{ selectedCustomer?.deliveryAddressLine2 }}</p>
+                                            <p class="mb-0">{{ selectedCustomer?.deliveryAddressLine3 }}</p>
+                                            <p class="mb-0">{{ selectedCustomer?.customerEmail }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Address and Contact ends -->
+
+                        <!-- Product Details starts -->
+                        <div class="card-body invoice-padding invoice-product-details">
+                            <form class="source-item" *ngIf="readyToDeliver != null">
+                                <div data-repeater-list="group-a">
+                                    <div class="repeater-wrapper" style="margin-bottom: 3rem;" data-repeater-item
+                                        *ngFor="let item of readyToDeliver.readyForDelivery; let i = index" @heightIn>
+                                        <div class="row">
+                                            <div class="col-12 d-flex product-details-border position-relative pr-0">
+                                                <div class="row w-100 pr-lg-0 pr-1 py-2">
+                                                    <div class="col-lg-6 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                        <p class="card-text col-title mb-md-50 mb-0">Faulty
+                                                            Item/Description
+                                                        </p>
+
+                                                        <input
+                                                            style="margin-bottom: 1rem;border: 0px solid #d8d6de;font-weight:bold;"
+                                                            *ngIf="readyToDeliver != null" type="text"
+                                                            class="form-control" id="partNumber{{ i }}"
+                                                            name="partNumber{{ i }}"
+                                                            [(ngModel)]="item.deviceDescription" />
+                                                        <div class="row" style="margin-bottom: 1rem;">
+
+                                                            <div class="col-lg-6 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                <!-- <input *ngIf="readyToDeliver != null" type="text"
+                                                                    class="form-control" id="serial{{ i }}"
+                                                                    name="serial{{ i }}" value="#Serial" disabled /> -->
+                                                                <input
+                                                                    style="border: 0px solid #d8d6de;font-weight:bold;"
+                                                                    class="card-text form-control" id="serial{{ i }}"
+                                                                    value="#SERIAL">
+
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2"
+                                                                *ngIf="!isAssetHidden">
+
+                                                                <input
+                                                                    style="border: 0px solid #d8d6de;font-weight:bold;"
+                                                                    class="card-text form-control" id="asset{{ i }}"
+                                                                    value="#ASSET">
+
+                                                                <!-- <input *ngIf="readyToDeliver != null" type="text"
+                                                                    class="form-control" id="asset{{ i }}"
+                                                                    name="asset{{ i }}" value="#Asset" disabled /> -->
+
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="repeater-wrapper" data-repeater-item
+                                                            *ngFor="let device of readyToDeliver.readyForDelivery[i].devices; let j = index"
+                                                            @heightIn>
+                                                            <div class="row" style="margin-bottom: 1rem;">
+                                                                <div class="col-lg-6 col-12 mb-lg-0 mb-0 mt-lg-0 mt-0">
+                                                                    <input
+                                                                        style="border: 0px solid #d8d6de;background-color: #fff;"
+                                                                        *ngIf="readyToDeliver != null" type="text"
+                                                                        class="form-control"
+                                                                        id="{{device.deviceSerialNumber}}"
+                                                                        name="{{device.deviceSerialNumber}}"
+                                                                        [(ngModel)]="device.deviceSerialNumber"
+                                                                        disabled />
+
+                                                                </div>
+
+                                                                <div class="col-lg-6 col-12 mb-lg-0 mb-0 mt-lg-0 mt-0"
+                                                                    *ngIf="!isAssetHidden">
+                                                                    <input
+                                                                        style="border: 0px solid #d8d6de;background-color: #fff;"
+                                                                        *ngIf="readyToDeliver != null" type="text"
+                                                                        class="form-control"
+                                                                        id="{{device.deviceAssetNumber}}"
+                                                                        name="{{device.deviceAssetNumber}}"
+                                                                        [(ngModel)]="device.deviceAssetNumber"
+                                                                        disabled />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-lg-2 col-12 my-lg-0 my-2">
+                                                        <br>
+                                                        <br>
+                                                        <br>
+                                                        <p class="card-text col-title mb-md-2 mb-0">Qty</p>
+
+
+
+                                                        <h4 id="itemQuantity{{ i }}">
+                                                            {{item.quantity}}
+                                                        </h4>
+                                                        <!-- <input type="number" class="form-control"
+                                                            id="itemQuantity{{ i }}" name="itemQuantity{{ i }}"
+                                                            [(ngModel)]="item.quantity" disabled /> -->
+                                                    </div>
+                                                    <div class="col-lg-4 col-12 mt-lg-0 mt-2">
+                                                        <p class="card-text col-title mb-md-50 mb-0">Status</p>
+                                                        <!-- <p class="card-text mb-0"></p> -->
+
+                                                        <div class="row" style="margin-bottom: 1rem;">
+
+
+                                                            <div class="col-lg-12 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                <p class="card-text"></p>
+                                                                <br />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom: 1rem;">
+
+
+
+                                                            <div class="col-lg-12 col-12 mb-lg-0 mb-2 mt-lg-0 mt-2">
+                                                                <input
+                                                                    style="border: 0px solid #d8d6de;font-weight:bold;"
+                                                                    *ngIf="readyToDeliver != null" type="text"
+                                                                    class="card-text form-control" value="#ACTION"
+                                                                    id="action{{ i }}">
+
+
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="repeater-wrapper" style="margin-bottom: 1rem;"
+                                                            data-repeater-item
+                                                            *ngFor="let device of readyToDeliver.readyForDelivery[i].devices; let k = index"
+                                                            @heightIn>
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-12 mb-lg-0 mb-0 mt-lg-0 mt-0">
+                                                                    <input
+                                                                        style="border: 0px solid #d8d6de;background-color: #fff;"
+                                                                        *ngIf="readyToDeliver != null" type="text"
+                                                                        class="form-control"
+                                                                        id="{{device.actionResult}}{{k}}"
+                                                                        name="{{device.actionResult}}{{k}}"
+                                                                        [(ngModel)]="device.actionResult" disabled />
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <!-- <div
+                                                    class="d-flex flex-column align-items-center justify-content-between border-left invoice-product-actions py-50 px-25">
+                                                    <button (click)="deleteItem(i)" class="btn p-0">
+                                                        <i data-feather="x" [size]="18" class="cursor-pointer"></i>
+                                                    </button>
+
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="row mt-1">
+                                    <div class="col-12 px-0">
+                                        <button type="button" class="btn btn-primary btn-sm btn-add-new"
+                                            (click)="addItem()" rippleEffect>
+                                            <i data-feather="plus" class="mr-25"></i>
+                                            <span class="align-middle">Add Item</span>
+                                        </button>
+                                    </div>
+                                </div> -->
+                            </form>
+                        </div>
+
+
+
+
+                        <hr class="invoice-spacing mt-0" />
+
+                        <div class="card-body invoice-padding py-0">
+                            <!-- Invoice Note starts -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group mb-2">
+                                        <label for="note" class="form-label font-weight-bold">Note:</label>
+                                        <textarea class="form-control" rows="2" id="note">
+It is a computer generated delivery note. Please contact support@mgc.ae if any details found to be incorrect. Thank You!</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Invoice Note ends -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Invoice Add Left ends -->
+
+                <!-- Invoice Add Right starts -->
+                <div class="col-xl-3 col-md-4 col-12 mt-md-0 mt-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- <button class="btn btn-primary btn-block mb-75" disabled rippleEffect>Send Email</button> -->
+                            <button routerLink="/repair/delivery-note/dn-preview/{{readyToDeliver.id}}"
+                                class="btn btn-outline-primary btn-block mb-75" *ngIf="isPreviewEnabled" rippleEffect>
+                                Preview
+                            </button>
+                            <button type="button" (click)="saveDeliveryNote()" class="btn btn-primary btn-block"
+                                rippleEffect>Save</button>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+
+                        <div class="invoice-terms mt-1">
+                            <div class="d-flex justify-content-between">
+                                <label class="invoice-terms-title mb-0" for="hiddenAsset">Hide Asset?</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" [(ngModel)]="isAssetHidden"
+                                        id="hiddenAsset" name="hiddenAsset" />
+                                    <label class="custom-control-label" for="hiddenAsset"></label>
+                                </div>
+                            </div>
+                            <!-- <div class="d-flex justify-content-between py-1">
+                                <label class="invoice-terms-title mb-0" for="hideAsset">Edit #Action?</label>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" [(ngModel)]="readyToDeliver.assetCodeHidden"
+                                        id="paymentTerms" />
+                                    <label class="custom-control-label" for="hideAsset"></label>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Invoice Add Right ends -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Add New Customer Sidebar -->
+    <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="invoide-add-sidebar"
+        overlayClass="modal-backdrop">
+        <!-- <app-add-customer-sidebar></app-add-customer-sidebar> -->
+    </core-sidebar>
+    <!--/  Add New Customer Sidebar -->
+</div>

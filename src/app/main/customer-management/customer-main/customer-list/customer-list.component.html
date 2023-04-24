@@ -1,0 +1,165 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+
+        <section id="ngx-datatable-kitchen-sink">
+            <core-card (events)="emittedEvents($event)" [actions]="[ 'expand', 'reload']">
+                <h4 class="card-title">List of Customers</h4>
+                <div class="row">
+                    <div class="col-12 mb-50">
+
+
+                        <button class="btn btn-primary ml-1" rippleEffect (click)="toggleSidebar('new-user-sidebar')">
+                            <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">New
+                                Customer</span>
+                        </button>
+
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-1">
+                            <label class="d-flex align-items-center">Show
+                                <select class="form-control mx-25" [(ngModel)]="basicSelectedOption">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                entries</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-md-end">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pl-1 pl-md-0 pb-md-0">
+                            <label class="d-flex align-items-center"><input type="search" placeholder="Search"
+                                    class="form-control ml-25" (keyup)="filterUpdate($event)"
+                                    (search)="filterUpdate($event)" /></label>
+                        </div>
+                    </div>
+                </div>
+                <ngx-datatable [rows]="kitchenSinkRows" [rowHeight]="70" class="bootstrap core-bootstrap" [limit]="10"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                    [selectionType]="SelectionType.checkbox" [limit]="basicSelectedOption"
+                    (activate)="onActivate($event)" (select)="onSelect($event)">
+
+                    <ngx-datatable-column name="Contact Detail" prop="full_name" [width]="200">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+                                <div *ngIf="row.customerName < 1; else customAvatar">
+                                    <img class="rounded-circle mr-1" src="{{ row.avatar }}" height="32" width="32"
+                                        alt="datatable-avatar" />
+                                </div>
+                                <ng-template #customAvatar>
+                                    <div class="avatar mr-1 ml-0 bg-light-success">
+                                        <div class="avatar-content">{{ row.customerName | initials }}</div>
+                                    </div>
+                                </ng-template>
+                                <div class="cell-line-height">
+                                    <span
+                                        class="font-weight-bold d-block text-nowrap font-medium-1">{{ row.customerName }}</span>
+                                    <span class="text-muted font-small-2"> @{{ row.customerEmail }}</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Company Details" prop="email" [width]="80">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height">
+                                    <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                        {{ row.companyCode }}
+                                    </p>
+                                    <span class="text font-small-10">{{ row.companyName }}</span>
+
+
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Address" prop="status" [width]="160">
+                        <ng-template let-row="row" let-status="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height">
+
+                                    <span class="text font-small-10">{{ row.deliveryAddressLine1 }}</span>
+                                    <br>
+                                    <span class="text font-small-10">{{ row.deliveryAddressLine2 }}</span>
+                                    <br>
+                                    <span class="text font-small-10">{{ row.deliveryAddressLine3 }}</span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Actions" [width]="120" [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+
+                            <div class="avatar avatar-status bg-light-warning">
+                                <ng-template #tipEditContent>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Edit" placement="top"
+                                    [ngbPopover]="tipEditContent" triggers="mouseenter:mouseleave" container="body"
+                                    (click)="toggleEditSidebar('edit-user-sidebar',row)">
+                                    <i class="feather avatar-icon font-medium-1 icon-edit-2"></i></span>
+                            </div>
+
+                            <!-- <div class="avatar avatar-status bg-light-warning">
+                                <ng-template #tipEditContent><span>{{ row.id }}<br />
+                                        <span class="font-weight-bold">No of Devices: {{ row.id }}</span></span>
+                                </ng-template> -->
+                            <!-- <span class="avatar-content" popoverTitle="Edit" placement="top"
+                                    [ngbPopover]="tipEditContent" triggers="mouseenter:mouseleave" container="body">
+                                    <i class="feather avatar-icon font-medium-1 tool"></i>
+                                </span> -->
+
+                            <!-- <span [data-feather]="'calendar'" [class]="'avatar-icon'"></span> -->
+                            <!-- </div> -->
+
+                            <div class="avatar bg-primary">
+                                <div class="avatar-content">
+                                    <span [data-feather]="'tool'" [class]="'avatar-icon'"></span>
+                                </div>
+                            </div>
+
+                            <!-- <div class="avatar avatar-status bg-light-primary">
+                                <ng-template #tipRFDContent><span>{{ row.id }}<br />
+                                        <span class="font-weight-bold">Mark Ready for Delivery
+                                        </span>
+                                    </span>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Change Status" placement="top"
+                                    [ngbPopover]="tipRFDContent" container="body">
+                                    <i class="feather avatar-icon font-medium-1 icon-check-circle"></i></span>
+                            </div> -->
+
+                            <!-- <div class="avatar avatar-status bg-light-danger">
+                                <ng-template #tipDeleteContent><span>{{ row.id }}<br />
+                                        <span class="font-weight-bold">Delete
+                                        </span>
+                                    </span>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Delete" placement="top"
+                                    [ngbPopover]="tipDeleteContent" triggers="mouseenter:mouseleave" container="body">
+                                    <i class="feather avatar-icon font-medium-1 icon-trash"></i></span>
+                            </div> -->
+
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </core-card>
+        </section>
+
+    </div>
+
+    <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="new-user-sidebar"
+        overlayClass="modal-backdrop">
+        <app-new-customer-sidebar></app-new-customer-sidebar>
+    </core-sidebar>
+
+    <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="edit-user-sidebar"
+        overlayClass="modal-backdrop">
+        <app-edit-customer-sidebar [item]="editCustomerItem"></app-edit-customer-sidebar>
+    </core-sidebar>
+
+</div>

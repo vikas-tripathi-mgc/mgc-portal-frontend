@@ -1,0 +1,274 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- content-header component -->
+        <!-- <app-content-header [contentHeader]="contentHeader"></app-content-header> -->
+
+        <section class="form-control-repeater">
+            <div class="row">
+                <!-- Invoice repeater -->
+                <div class="col-12">
+                    <!-- <core-card-snippet [snippetCode]="_snippetCodeInvoiceRepeater"> -->
+                    <core-card>
+
+                        <h4 class="card-title">Bulk Fault Case</h4>
+
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <div class="col-12  mt-75">
+
+                                    <button class="btn btn-icon btn-primary ml-1 float-right" (click)="addItem()"
+                                        rippleEffect>
+                                        <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i>
+                                        <span class="d-none d-sm-inline-block">Add New</span>
+                                    </button>
+
+
+                                    <a routerLink="/repair/fault-case/fault-bulk" class="font-weight-bold">
+                                        <button class="btn btn-icon btn-primary ml-1 float-right"
+                                            (click)="bulkUploadFaultCases()" rippleEffect>
+                                            <i data-feather="upload"
+                                                class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                                class="d-none d-sm-inline-block">Import All</span>
+                                        </button>
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <!-- <div class="row">
+                                <div class="col-12 mb-50">
+
+                                    <div class="row">
+                                        <div class="col-12">
+
+                                            <button class="btn btn-icon btn-primary float-right mr-50" type="button"
+                                                (click)="addItem()" rippleEffect>
+                                                <i data-feather="navigation" class="mr-25"></i>
+                                                <span>Import All</span>
+                                            </button>
+
+                                            <button class="btn btn-icon btn-primary float-right mr-50" type="button"
+                                                (click)="addItem()" rippleEffect>
+                                                <i data-feather="plus" class="mr-50"></i>
+                                                <span>Add New</span>
+                                            </button>
+
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div> -->
+                            <form action="#" class="add-new-user">
+                                <!-- <div *ngFor="let item of items; let i = index" @heightIn> -->
+                                <div class="row d-flex align-items-end">
+
+
+                                    <div class="col-md-3 col-12">
+                                        <div class="form-group">
+                                            <label for="serialNos">Serial Number</label>
+                                            <fieldset class="form-group">
+                                                <textarea type="text" class="form-control"
+                                                    [(ngModel)]="bulkTempValues.serialNumbers" name="serialNos"
+                                                    id="serialNos" placeholder="Serial Numbers (separated by commas)"
+                                                    rows="5"></textarea>
+                                            </fieldset>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-12">
+                                        <div class="form-group">
+                                            <label for="assetCodes">Asset Code</label>
+                                            <fieldset class="form-group">
+                                                <textarea type="text" class="form-control"
+                                                    [(ngModel)]="bulkTempValues.assetCodes" name="assetCodes"
+                                                    id="assetCodes" placeholder="Asset Codes (separated by commas)"
+                                                    rows="5"></textarea>
+                                            </fieldset>
+                                            <!-- <input type="text" class="form-control" [(ngModel)]="bulkValues.assetCode"
+                                                name="assetCodes" id="assetCodes"
+                                                placeholder="Asset Codes (separated by commas)" /> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-12">
+                                        <div class="form-group">
+                                            <!-- <label for="customer">Customer</label>
+                                            <input type="text" class="form-control"
+                                                [(ngModel)]="bulkTempValues.customer" name="customer" id="customer"
+                                                placeholder="Customer" /> -->
+
+                                            <label for="customer">Customer</label>
+                                            <select [(ngModel)]="bulkTempValues.customer" class="form-control"
+                                                name="customer" id="customer" placeholder="Customer">
+
+                                                <option [ngValue]="category"
+                                                    *ngFor="let category of uniqueCustomerCodes">{{category}}
+                                                </option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-2 col-12 mr-25">
+                                        <div class="form-group">
+                                            <button class="btn btn-success text-nowrap px-1" (click)="addBulkItems()"
+                                                rippleEffect>
+                                                <i data-feather="hash" class="mr-25"></i>
+                                                <span>Run Script</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <hr />
+                                <!-- </div> -->
+                            </form>
+
+                            <form action="#" class="invoice-repeater" *ngIf=" items.length>1">
+                                <div *ngFor="let item of items; let i = index" @heightIn>
+                                    <div class="row d-flex align-items-end">
+                                        <div class="col-md-2 col-12">
+                                            <div class="form-group">
+                                                <label for="serialNumber{{ i }}">Serial Number</label>
+                                                <input type="text" class="form-control" [(ngModel)]="item.serialNumber"
+                                                    name="serialNumber{{ i }}" id="serialNumber{{ i }}"
+                                                    placeholder="Serial Number" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2 col-12">
+                                            <div class="form-group">
+                                                <label for="assetCode{{ i }}">Asset Code</label>
+                                                <input type="text" class="form-control" [(ngModel)]="item.assetCode"
+                                                    name="assetCode{{ i }}" id="assetCode{{ i }}"
+                                                    placeholder="Asset Code" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2 col-12">
+                                            <div class="form-group">
+                                                <label for="customer{{ i }}">Customer</label>
+                                                <input type="text" class="form-control" [(ngModel)]="item.customer"
+                                                    name="customer{{ i }}" id="customer{{ i }}" placeholder="Customer"
+                                                    disabled />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2 col-12">
+                                            <div class="form-group">
+                                                <label for="faultCategory{{ i }}">Fault Category</label>
+                                                <!-- <input type="text" class="form-control" [(ngModel)]="item.faultCategory"
+                                                    name="faultCategory{{ i }}" id="faultCategory{{ i }}"
+                                                    placeholder="Fault Category" /> -->
+                                                <select class="form-control" [(ngModel)]="item.faultCategory"
+                                                    name="faultCategory{{ i }}" id="faultCategory{{ i }}">
+                                                    <option disabled [ngValue]="null">-/-</option>
+                                                    <option [ngValue]="category.title"
+                                                        *ngFor="let category of rmaFaultSelectionService.mainGroups">
+                                                        {{category.title}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2 col-12">
+                                            <div class="form-group">
+                                                <label for="faultSubCategory{{ i }}">Fault Sub Category</label>
+                                                <select class="form-control" [(ngModel)]="item.faultSubCategory"
+                                                    name="faultSubCategory{{ i }}" id="faultSubCategory{{ i }}">
+                                                    <option [ngValue]="subcategory.title"
+                                                        *ngFor="let subcategory of filterSubById(item.faultCategory)">
+                                                        {{subcategory.title}}
+                                                    </option>
+                                                </select>
+                                                <!-- <input type="text" class="form-control"
+                                                    [(ngModel)]="item.faultSubCategory" name="faultSubCategory{{ i }}"
+                                                    id="faultSubCategory{{ i }}" placeholder="Fault SubCategory" /> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2 col-12">
+                                            <div class="form-group">
+                                                <label for="Description{{ i }}">Fault Description</label>
+                                                <fieldset class="form-group">
+                                                    <textarea type="text" class="form-control"
+                                                        [(ngModel)]="item.faultDescription" name="Description{{ i }}"
+                                                        id="Description{{ i }}" rows="1"
+                                                        placeholder="Fault Description"></textarea>
+                                                </fieldset>
+
+                                                <!-- <textarea type="text" class="form-control"
+                                                    [(ngModel)]="item.Description" name="itemName{{ i }}"
+                                                    id="itemName{{ i }}" placeholder="Fault Description" /> -->
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="col-md-2 col-12">
+                                        <div class="form-group">
+                                            <label for="itemCost">Cost</label>
+                                            <input type="number" class="form-control" id="itemcost"
+                                                [(ngModel)]="item.itemCost" name="itemCost{{ i }}" id="itemCost{{ i }}"
+                                                placeholder="32" />
+                                        </div>
+                                    </div> -->
+
+                                        <!-- <div class="col-md-2 col-12">
+                                        <div class="form-group">
+                                            <label for="itemQuantity{{ i }}">Quantity</label>
+                                            <input type="number" class="form-control" id="itemQuantity{{ i }}"
+                                                name="itemQuantity{{ i }}" [(ngModel)]="item.itemQuantity"
+                                                placeholder="1" />
+                                        </div>
+                                    </div> -->
+
+                                        <!-- <div class="col-md-2 col-12">
+                                        <div class="form-group">
+                                            <label for="staticPrice">Price</label>
+                                            <input type="text" readonly class="form-control-plaintext" id="staticPrice"
+                                                value="$32" />
+                                        </div>
+                                    </div> -->
+
+                                        <div class="col-md-2 col-12 mb-30">
+                                            <div class="form-group">
+                                                <button class="btn btn-outline-danger text-nowrap px-1"
+                                                    (click)="deleteItem(i)" rippleEffect>
+                                                    <i data-feather="x" class="mr-25"></i>
+                                                    <span>Delete</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                </div>
+                            </form>
+
+                            <pre class="p-1 text-white mt-1">
+
+                <div  *ngFor="let item of items; let i = index">
+    Item: {{ i+1 }}
+    Serial Number: {{ item.serialNumber }}
+    Asset Code: {{ item.assetCode }}
+    Customer: {{ item.customer }}
+    Fault Category: {{ item.faultCategory }}
+    Fault SubCategory: {{ item.faultSubCategory }}
+    Fault Description: {{ item.faultDescription }}</div>
+              </pre>
+                        </div>
+                        <!-- </core-card-snippet> -->
+                    </core-card>
+                </div>
+                <!--/ Invoice repeater -->
+            </div>
+        </section>
+
+    </div>
+</div>

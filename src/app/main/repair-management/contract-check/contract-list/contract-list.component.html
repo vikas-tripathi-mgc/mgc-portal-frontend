@@ -1,0 +1,349 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+
+        <section class="form-control-repeater">
+            <div class="row">
+                <div class="col-12">
+                    <core-card>
+
+                        <h4 class="card-title">Contract Validity Status</h4>
+
+                        <div class="card-body">
+
+                            <form action="#" class="add-new-user">
+                                <div class="row d-flex align-items-end">
+
+
+                                    <div class="col-md-4 col-12">
+                                        <div class="form-group">
+                                            <label for="serialNumber">Serial Number </label>
+                                            <div class="badge badge-glow " [ngClass]="{
+                                                                                                          'badge-light-success': rows.length > 0,
+                                                                                                          'badge-light-danger': rows.length === 0
+                                                                                                        }">
+                                                {{ rows.length > 0 ? 'Active' : rows.length === 0 ? 'Billable' : '' }}
+                                            </div>
+                                            <input type="text" class="form-control" name="serialNumber"
+                                                id="serialNumber" [(ngModel)]="contractDetail.serialNumber"
+                                                placeholder=" Serial Number" />
+                                        </div>
+                                    </div>
+
+
+                                    <!-- <div class="col-md-4 col-12">
+                                        <div class="form-group">
+                                            <label for="emailAddress">Email Address</label>
+                                            <input type="text" class="form-control" name="emailAddress"
+                                                [(ngModel)]="rmaDetail.emailAddress" id=" emailAddress"
+                                                placeholder="vikas@menagalaxy.com" />
+                                        </div>
+                                    </div> -->
+
+
+                                    <div class="col-md-2 col-12 mr-25">
+                                        <div class="form-group">
+                                            <button class="btn btn-success text-nowrap px-1"
+                                                (click)="validateContract()" rippleEffect>
+                                                <!-- <i *ngIf="loading == false" data-feather="search" class="mr-25"></i> -->
+
+                                                <!-- <span *ngIf="loading == false" data-feather="search"
+                                                    class=" mr-1"></span> -->
+                                                <span *ngIf="loading"
+                                                    class="spinner-border spinner-border-sm mr-1"></span>
+                                                <span *ngIf="loading == false">Validate</span>
+                                                <span *ngIf="loading">Validating</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </div>
+                                <!-- <hr /> -->
+                            </form>
+
+                            <ngx-datatable [rows]="kitchenSinkRows" [rowHeight]="70" class="bootstrap core-bootstrap"
+                                [limit]="10" [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                [scrollbarH]="true" [selectionType]="SelectionType.checkbox"
+                                [limit]="basicSelectedOption" (activate)="onActivate($event)"
+                                (select)="onSelect($event)">
+
+                                <ngx-datatable-column name="Service Name" prop="full_name" [width]="150">
+                                    <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="cell-line-height">
+                                                <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                                    {{row.Type_x}}
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Entitlement Start Date" prop="email" [width]="150">
+                                    <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="cell-line-height">
+                                                <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                                    {{ row.EntitlementStartDate }}
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Entitlement End Date" prop="start_date" [width]="150">
+                                    <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="cell-line-height">
+                                                <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                                    {{ row.EntitlementEndDate }}
+                                                </p>
+
+
+
+                                            </div>
+
+
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Status" prop="status" [width]="120">
+                                    <ng-template let-row="row" let-status="value" ngx-datatable-cell-template>
+                                        <div class="badge " [ngClass]="{
+                                                                                                          'badge-light-success': getValidationServiceDateStatus(row.EntitlementStartDate,row.EntitlementEndDate) === true,
+                                                                                                          'badge-light-danger': getValidationServiceDateStatus(row.EntitlementStartDate,row.EntitlementEndDate) === false
+                                                                                                        }">
+                                            <span
+                                                *ngIf="getValidationServiceDateStatus(row.EntitlementStartDate,row.EntitlementEndDate) === true"
+                                                class="font-small-7">
+
+                                                Active
+                                            </span>
+                                            <span
+                                                *ngIf="!getValidationServiceDateStatus(row.EntitlementStartDate,row.EntitlementEndDate) === true"
+                                                class="font-small-7">
+
+                                                Non Active
+                                            </span>
+
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <!-- <ngx-datatable-column name="Tracking Number" prop="salary" [width]="120">
+                                    <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="cell-line-height" *ngIf="!(row.trackingNumber== null)">
+                                                <p class="font-small-5 font-weight-bold line-height-1 mb-25">
+                                                    {{ row.trackingNumber }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column> -->
+
+                            </ngx-datatable>
+
+
+                        </div>
+                    </core-card>
+                </div>
+            </div>
+
+
+        </section>
+
+
+        <section id="ngx-datatable-kitchen-sink">
+            <core-card (events)="emittedEvents($event)" [actions]="[ 'expand', 'reload']" [reloadTime]="'1000'">
+                <h4 class="card-title">List of Devices in Contract</h4>
+                <div class="row">
+                    <div class="col-12 mb-50">
+
+
+                        <button class="btn btn-primary ml-1" rippleEffect>
+                            <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">IMPORT ZEBRA LIST</span>
+                        </button>
+
+                        <button class="btn btn-primary ml-1" rippleEffect>
+                            <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">IMPORT CUSTOMER LIST</span>
+                        </button>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-1">
+                            <label class="d-flex align-items-center">Show
+                                <select class="form-control mx-25" [(ngModel)]="basicSelectedOption">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                entries</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-md-end">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pl-1 pl-md-0 pb-md-0">
+                            <label class="d-flex align-items-center"><input type="search" placeholder="Search"
+                                    class="form-control ml-25" (keyup)="filterUpdate($event)"
+                                    (search)="filterUpdate($event)" /></label>
+                        </div>
+                    </div>
+                </div>
+                <ngx-datatable [rows]="allRMAListRows" [rowHeight]="70" class="bootstrap core-bootstrap" [limit]="10"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                    [selectionType]="SelectionType.checkbox" [limit]="basicSelectedOption"
+                    (activate)="onActivate($event)" (select)="onSelect($event)">
+                    <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                        [resizeable]="false">
+                        <ng-template ngx-datatable-header-template let-value="value"
+                            let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" [checked]="allRowsSelected"
+                                    (change)="selectFn(!allRowsSelected)" id="headerChkbxRef" />
+                                <label class="custom-control-label" for="headerChkbxRef"></label>
+                            </div>
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                            let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" [checked]="isSelected"
+                                    (change)="onCheckboxChangeFn($event)" id="rowChkbxRef{{ row.id }}" />
+                                <label class="custom-control-label" for="rowChkbxRef{{ row.id }}"></label>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Device Details" prop="full_name" [width]="150">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height">
+                                    <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                        {{ row.serialNumber }}
+                                    </p>
+                                    <span class="text font-small-5">{{ row.assetCode }} </span>
+
+                                    <div class="badge badge-glow " [ngClass]="{
+                                                              'badge-light-success': row.isInContract == 'true',
+                                                              'badge-light-danger': row.isInContract == 'false',
+                                                              'badge-light-danger': row.isInContract == null
+                                                            }">
+                                        {{ row.isInContract == "true" ? 'Active' : row.isInContract == "false" ? 'Billable' : 'Pending' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Customer" prop="email" [width]="150">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height">
+                                    <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                        {{ row.customer }}
+                                    </p>
+                                    <span class="text font-small-10">{{ row.emailDate }}</span>
+                                    <br>
+                                    <span class="text font-small-5"> {{ row.faultDescription }}</span>
+
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="RMA" prop="start_date" [width]="120">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height" *ngIf="!row.repairedByUs">
+                                    <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                        {{ row.rmaNumber }}
+                                    </p>
+
+                                    <div class="badge badge-glow badge-success">
+                                        {{ row.rmaStatus }}
+                                    </div>
+
+                                </div>
+
+                                <div class="cell-line-height" *ngIf="row.repairedByUs">
+
+
+                                    <div class="badge badge-glow badge-light-secondary">
+                                        Repaired by us
+                                    </div>
+
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Status" prop="status" [width]="120">
+                        <ng-template let-row="row" let-status="value" ngx-datatable-cell-template>
+                            <div class="badge badge-glow badge-success" *ngIf="!(row.repairStatus == null)">
+                                <span class="font-small-7">
+                                    {{ row.repairStatus }}
+                                </span>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Delivery" prop="salary" [width]="120">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height" *ngIf="!(row.deliveryDate== null)">
+                                    <p class="font-small-5 font-weight-bold line-height-1 mb-25">
+                                        {{ row.deliveryDate }}
+                                    </p>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Actions" [width]="120" [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+
+                            <div class="avatar avatar-status bg-light-warning">
+                                <ng-template #tipEditContent><span>{{ row.id }}<br />
+                                        <span class="font-weight-bold">Editing: {{ row.id }}</span></span>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Edit" placement="top"
+                                    [ngbPopover]="tipEditContent" triggers="mouseenter:mouseleave" container="body">
+                                    <i class="feather avatar-icon font-medium-1 icon-edit-2"></i></span>
+                            </div>
+
+                            <div class="avatar avatar-status bg-light-primary">
+                                <ng-template #tipRFDContent><span>{{ row.id }}<br />
+                                        <span class="font-weight-bold">Mark Ready for Delivery
+                                        </span>
+                                    </span>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Change Status" placement="top"
+                                    [ngbPopover]="tipRFDContent" container="body">
+                                    <i class="feather avatar-icon font-medium-1 icon-check-circle"></i></span>
+                            </div>
+
+
+
+                            <div class="avatar avatar-status bg-light-danger">
+                                <ng-template #tipDeleteContent><span>{{ row.id }}<br />
+                                        <span class="font-weight-bold">Delete
+                                        </span>
+                                    </span>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Delete" placement="top"
+                                    [ngbPopover]="tipDeleteContent" triggers="mouseenter:mouseleave" container="body">
+                                    <i class="feather avatar-icon font-medium-1 icon-trash"></i></span>
+                            </div>
+
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </core-card>
+        </section>
+
+    </div>
+</div>

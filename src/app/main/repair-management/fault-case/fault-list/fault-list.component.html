@@ -1,0 +1,658 @@
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+
+        <section id="ngx-datatable-kitchen-sink">
+            <core-card (events)="emittedEvents($event)" [actions]="[ 'expand', 'reload']">
+                <h4 class="card-title">Fault Cases</h4>
+                <div class="row">
+                    <div class="col-12 mb-50">
+
+
+                        <button class="btn btn-primary ml-1" rippleEffect (click)="toggleSidebar('new-user-sidebar')">
+                            <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">New
+                                Case</span>
+                        </button>
+
+
+                        <a routerLink="/repair/fault-case/fault-bulk" class="font-weight-bold">
+                            <button class="btn btn-primary ml-1" rippleEffect>
+                                <i data-feather="upload" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                    class="d-none d-sm-inline-block">New Bulk
+                                    Cases</span>
+                            </button>
+                        </a>
+
+                        <button class="btn btn-primary ml-1" rippleEffect (click)="modalOpenForm(modalForm)">
+                            <i data-feather="plus" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">Update RMA</span>
+                        </button>
+
+                        <!-- <button class="btn btn-danger ml-1" rippleEffect (click)="toggleSidebar('new-user-sidebar')">
+                            <i data-feather="trash" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">Delete</span>
+                        </button> -->
+
+                        <!-- <a ng2FileSelect [uploader]="uploader" class="btn btn-primary float-right mr-1" rippleEffect>
+                            <i data-feather="download" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">Import
+                                CSV</span>
+                        </a> -->
+                        <button type="button" class="btn btn-primary float-right mr-1" rippleEffect
+                            (click)="fileInput.click()">
+                            <i data-feather="upload" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">Import CSV</span>
+                            <input #fileInput type="file" (change)="onFileInput($event)" style="display:none;" />
+                        </button>
+                        <!-- <input class="custom-file-input float-right mr-1" rippleEffect type="file" ng2FileSelect
+                            [uploader]="uploader" id="file-upload-single" /> -->
+
+                        <!-- <div class="custom-file">
+                            <input type="button" class="custom-file-input" type="file" ng2FileSelect
+                                [uploader]="uploader" id="file-upload-single" />
+                            <i data-feather="upload" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">
+                                Import CSV</span>
+                        </div> -->
+
+                        <button type="button" class="btn btn-primary float-right mr-1" rippleEffect
+                            (click)="exportForCSV()">
+                            <i data-feather="download" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">Export [ RMA ]</span>
+                        </button>
+
+                        <!-- <a csvLink [data]="exportCSVData" class="btn btn-primary float-right mr-1" rippleEffect>
+                            <i data-feather="download" class="d-sm-none d-inline-block mr-0 mr-sm-1"></i><span
+                                class="d-none d-sm-inline-block">Export
+                                CSV</span>
+                        </a> -->
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="d-flex justify-content-between align-items-center m-1">
+                            <label class="d-flex align-items-center">Show
+                                <select class="form-control mx-25" [(ngModel)]="basicSelectedOption">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                entries</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12 d-flex justify-content-md-end">
+                        <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pl-1 pl-md-0 pb-md-0">
+                            <label class="d-flex align-items-center"><input type="search" placeholder="Search"
+                                    class="form-control ml-25" (keyup)="filterUpdate($event)"
+                                    (search)="filterUpdate($event)" /></label>
+                        </div>
+                    </div>
+                </div>
+                <ngx-datatable [rows]="kitchenSinkRows" [rowHeight]="100" class="bootstrap core-bootstrap" [limit]="10"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" [scrollbarH]="true"
+                    [selectionType]="SelectionType.checkbox" [limit]="basicSelectedOption"
+                    (activate)="onActivate($event)" (select)="onSelect($event)">
+                    <ngx-datatable-column [width]="50" [sortable]="false" [canAutoResize]="false" [draggable]="false"
+                        [resizeable]="false">
+                        <ng-template ngx-datatable-header-template let-value="value"
+                            let-allRowsSelected="allRowsSelected" let-selectFn="selectFn">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" [checked]="allRowsSelected"
+                                    (change)="selectFn(!allRowsSelected)" id="headerChkbxRef" />
+                                <label class="custom-control-label" for="headerChkbxRef"></label>
+                            </div>
+                        </ng-template>
+                        <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value"
+                            let-isSelected="isSelected" let-onCheckboxChangeFn="onCheckboxChangeFn">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" [checked]="isSelected"
+                                    (change)="onCheckboxChangeFn($event)" id="rowChkbxRef{{ row.id }}" />
+                                <label class="custom-control-label" for="rowChkbxRef{{ row.id }}"></label>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Device Details" prop="full_name" [width]="150">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height">
+                                    <!-- <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                        {{ row.deviceModel}}
+                                    </p> -->
+                                    <div class="badge badge-light-warning mb-25">
+                                        <span class="text font-small-5 ">{{ row.deviceModel}}</span>
+                                    </div>
+                                    <!-- <p class="font-medium-2 font-weight-bold line-height-1 mb-25">
+                                        {{ row.serialNumber }}
+                                    </p> -->
+                                    <br />
+                                    <div class="badge badge-light-secondary mb-25 mr-25">
+                                        <span class="text font-small-5">{{ row.serialNumber }} </span>
+                                    </div>
+                                    <!-- <div class="badge badge-light-secondary mb-25 mr-25" *ngIf="row.replacementByUs">
+                                        <span class="text font-small-5">{{ row.replacementSerialNoByUs }} </span>
+                                    </div>
+                                    <div class="badge badge-light-secondary mb-25 mr-25" *ngIf="row.replacementByZebra">
+                                        <span class="text font-small-5">{{ row.replacementSerialNo }} </span>
+                                    </div> -->
+                                    <br />
+                                    <div class="badge badge-light-secondary mb-25 mr-25">
+                                        <!-- *ngIf=" row.deviceModel.length> 0" -->
+                                        <span class="text font-small-5">{{ row.assetCode }} </span>
+                                    </div>
+
+                                    <!-- <div class="badge badge-glow " [ngClass]="{
+                                                      'badge-light-success': row.isInContract == 'true',
+                                                      'badge-light-danger': row.isInContract == 'false',
+                                                      'badge-light-danger': row.isInContract == null
+                                                    }">
+                                        {{ row.isInContract == "true" ? 'Active' : row.isInContract == "false" ? 'Billable' : 'Pending' }}
+                                    </div> -->
+
+                                    <!-- <div class="badge " [ngClass]="{'badge-light-danger': row.isInContract === '0',
+                                    'badge-light-success': row.isInContract === '2',
+                                    'badge-light-success': row.isInContract === '1',
+                                    'badge-light-danger': row.isInContract === '3',
+                                    'badge-light-danger': row.isInContract === null}">
+
+                                        <span class="text font-small-5" *ngIf="row.isInContract == 1">Contract</span>
+                                        <span class="text font-small-5" *ngIf="row.isInContract == 2">Warranty</span>
+                                        <span class="text font-small-5" *ngIf="row.isInContract == 0">Billable</span>
+                                        <span class="text font-small-5" *ngIf="row.isInContract == 3">Unavailable</span>
+                                    </div> -->
+                                    <br />
+                                    <div class="badge badge-light-danger" *ngIf="row.isInContract == 0">
+                                        <span class="text font-small-5" *ngIf="row.isInContract == 0">Billable</span>
+                                    </div>
+                                    <div class="badge badge-light-success" *ngIf="row.isInContract == 1">
+                                        <span class="text font-small-5" *ngIf="row.isInContract == 1">Contract</span>
+                                    </div>
+                                    <div class="badge badge-light-success" *ngIf="row.isInContract == 2">
+                                        <span class="text font-small-5" *ngIf="row.isInContract == 2">Warranty</span>
+                                    </div>
+                                    <div class="badge badge-light-secondary" *ngIf="row.isInContract == null">
+                                        <span class="text font-small-5" *ngIf="row.isInContract == 3">Unavailable</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Customer" prop="email" [width]="150">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height">
+                                    <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                        Belongs to: {{ row.customer }}
+                                    </p>
+                                    <span class="text font-small-10">Email Date: {{ row.emailDate }}</span>
+                                    <br>
+                                    <span class="text font-small-10">Collection Date: {{ row.collectionDate }}</span>
+                                    <br>
+                                    <span class="text font-small-5 text-wrap"
+                                        *ngIf="row.rmaFaultSubCategory!=null && row.rmaFaultSubCategory.length>0">
+                                        {{ row.rmaFaultSubCategory }}</span>
+                                    <span class="text font-small-5 text-wrap"
+                                        *ngIf="row.rmaFaultCategory!=null && row.rmaFaultCategory.length==0">
+                                        {{ row.faultDescription }}</span>
+
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="RMA" prop="start_date" [width]="120">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height" *ngIf="!row.repairedByUs">
+                                    <p class="font-medium-1 font-weight-bold line-height-1 mb-25">
+                                        {{ row.rmaNumber }}
+                                    </p>
+
+                                    <!-- <div class="badge badge-success" *ngIf="row.rmaStatus.">
+                                        {{ row.rmaStatus }}
+                                    </div> -->
+
+
+                                    <div *ngIf="!(row.rmaStatus == null)">
+
+
+                                        <div class="badge badge-light-success" *ngIf="row.rmaStatus == 'RMA Closed'">
+                                            <span class="font-small-7">
+                                                {{ row.rmaStatus }}
+                                            </span>
+                                        </div>
+                                        <div class="badge badge-light-primary"
+                                            *ngIf="row.rmaStatus == 'Repair Completed'">
+                                            <span class="font-small-7">
+                                                {{ row.rmaStatus }}
+                                            </span>
+                                        </div>
+
+                                        <div class="badge badge-light-primary"
+                                            *ngIf="row.rmaStatus == 'Repair Started'">
+                                            <span class="font-small-7">
+                                                {{ row.rmaStatus }}
+                                            </span>
+                                        </div>
+                                        <div class="badge badge-light-danger" *ngIf="row.rmaStatus == 'Open'">
+                                            <span class="font-small-7">
+                                                {{ row.rmaStatus }}
+                                            </span>
+                                        </div>
+                                        <div class="badge badge-light-danger" *ngIf="row.rmaStatus == 'Pending'">
+                                            <span class="font-small-7">
+                                                {{ row.rmaStatus }}
+                                            </span>
+                                        </div>
+                                        <div class="badge badge-light-warning" *ngIf="row.rmaStatus == 'Shipping'">
+                                            <span class="font-small-7">
+                                                {{ row.rmaStatus }}
+                                            </span>
+                                        </div>
+                                        <div class="badge badge-light-warning" *ngIf="row.rmaStatus == 'Received'">
+                                            <span class="font-small-7">
+                                                {{ row.rmaStatus }}
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="cell-line-height"
+                                    *ngIf="row.repairedByUs && (row.rmaFaultCategory!=null  )">
+                                    <!-- row.repairedByUs && (row.rmaFaultCategory!=null ) &&  -->
+
+                                    <div class="badge badge-glow badge-light-warning" *ngIf="!row.notRepaired">
+                                        Repaired by us
+                                    </div>
+
+                                    <div *ngIf="row.notRepaired" class="badge badge-glow badge-light-danger">
+                                        Not Repaired
+                                    </div>
+
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Status" prop="status" [width]="120">
+                        <ng-template let-row="row" let-status="value" ngx-datatable-cell-template>
+                            <div *ngIf="!(row.repairStatus == null)">
+
+                                <div class="badge badge-light-success" *ngIf="row.repairStatus == 'Ready for Delivery'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+                                    </span>
+                                </div>
+
+                                <div class="badge badge-light-success"
+                                    *ngIf="row.repairStatus == 'Delivery note Generated'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+
+                                    </span>
+
+
+                                </div>
+
+                                <div class="badge badge-light-success"
+                                    *ngIf="row.repairStatus == 'Delivery note Generated'">
+
+
+                                </div>
+
+                                <div class="badge badge-light-success" *ngIf="row.repairStatus == 'Delivered'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+                                    </span>
+                                </div>
+
+                                <div class="badge badge-light-warning" *ngIf="row.repairStatus == 'Repaired'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+                                    </span>
+                                </div>
+
+                                <div class="badge badge-light-warning" *ngIf="row.repairStatus == 'Replacement by MGC'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+                                    </span>
+                                </div>
+
+                                <div class="badge badge-light-warning"
+                                    *ngIf="row.repairStatus == 'Replacement by Zebra'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+                                    </span>
+                                </div>
+
+                                <div class="badge badge-light-warning" *ngIf="row.repairStatus == 'Quote Sent'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+                                    </span>
+                                </div>
+
+                                <div class="badge badge-light-success" *ngIf="row.repairStatus == 'Returned'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+                                    </span>
+                                </div>
+
+                                <div class="badge badge-light-warning" *ngIf="row.repairStatus == 'On Hold'">
+                                    <span class="font-small-7">
+                                        {{ row.repairStatus }}
+                                    </span>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Delivery" prop="salary" [width]="120">
+                        <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                            <div class="d-flex align-items-center">
+
+                                <div class="cell-line-height"
+                                    *ngIf="(row.repairStatus == 'Delivery note Generated')||(row.repairStatus == 'Delivered')">
+
+                                    <span class="font-small-7">
+
+                                        <a routerLink="/repair/delivery-note/dn-preview/{{ row.deliveryNoteId }}"
+                                            class="font-weight-bold">#{{ row.deliveryNoteId }}</a>
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex align-items-center">
+
+
+                                <div class="cell-line-height" *ngIf="!(row.deliveryDate== null)">
+                                    <p class="font-small-5 font-weight-bold line-height-1 mb-25">
+                                        {{ row.deliveryDate }}
+                                    </p>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Actions" [width]="120" [sortable]="false">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+
+
+
+                            <div class="avatar avatar-status bg-light-warning">
+                                <ng-template #tipEditContent>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Edit" placement="top"
+                                    [ngbPopover]="tipEditContent" triggers="mouseenter:mouseleave" container="body"
+                                    (click)="toggleEditSidebar('edit-fault-sidebar',row)">
+                                    <i class="feather avatar-icon font-medium-1 icon-edit-2"></i></span>
+                            </div>
+
+                            <!-- <div class="avatar avatar-status bg-light-primary"
+                                *ngIf="((row.repairStatus !== 'Quote Sent') && (row.isInContract== '0') && (row.repairStatus !== 'Closed') && (row.repairStatus !== 'Returned')) ">
+                                
+                                <ng-template #tipQuoteSentContent>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Quote Sent" placement="top"
+                                    [ngbPopover]="tipQuoteSentContent" triggers="mouseenter:mouseleave"
+                                    container="body">
+                                    <i class="feather avatar-icon font-medium-1 icon-send"></i></span>
+                            </div> -->
+
+                            <!-- <div class="avatar avatar-status bg-light-secondary"
+                                *ngIf="((row.rmaStatus=='RMA Closed') && (row.repairStatus === 'Repaired') || ((row.repairStatus !== 'Returned'))) ">
+                                
+                                <ng-template #tipCloseCaseContent>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Close Case" placement="top"
+                                    [ngbPopover]="tipCloseCaseContent" triggers="mouseenter:mouseleave"
+                                    container="body">
+                                    <i class="feather avatar-icon font-medium-1 icon-delete"></i></span>
+                            </div> -->
+
+                            <!-- <div class="avatar avatar-status bg-light-primary"
+                                *ngIf="(((row.rmaStatus=='RMA Closed') && ((row.repairStatus === 'Repaired')||(row.repairStatus === 'Replaced'))) || ((row.repairStatus !== 'Returned'))) ">
+                                <ng-template #tipRFDContent>
+                                    
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Ready for Delivery" placement="top"
+                                    [ngbPopover]="tipRFDContent" container="body" triggers="mouseenter:mouseleave">
+                                    <i class="feather avatar-icon font-medium-1 icon-check-circle"></i></span>
+                            </div> -->
+
+                            <div class="avatar avatar-status bg-light-primary" ngbDropdown container="body">
+                                <!-- <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow"
+                                    rippleEffect>
+                                    <span [data-feather]="'more-vertical'" [class]="'cursor-pointer'"></span>
+                                </button> -->
+
+
+                                <span class="avatar-content hide-arrow" container="body" ngbDropdownToggle>
+                                    <i class="feather avatar-icon font-medium-1 icon-more-vertical"></i>
+                                </span>
+                                <div ngbDropdownMenu>
+                                    <button
+                                        *ngIf="!(row.repairStatus == 'Delivery note Generated' || row.repairStatus == 'Delivered')"
+                                        (click)="updateFaultCaseStatus(row.id,'Ready for Delivery')" ngbDropdownItem>
+                                        <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span>
+                                        Ready for Delivery
+                                    </button>
+                                    <button
+                                        *ngIf="!(row.repairStatus == 'Delivery note Generated' || row.repairStatus == 'Delivered')"
+                                        (click)="updateFaultCaseStatus(row.id,'Repaired')" ngbDropdownItem>
+                                        <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span>
+                                        Repaired
+                                    </button>
+                                    <button
+                                        *ngIf="!(row.repairStatus == 'Delivery note Generated' || row.repairStatus == 'Delivered')"
+                                        (click)="modalOpenReplacementByUsForm(modalReplacementByUsForm, row.id)"
+                                        ngbDropdownItem>
+                                        <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span>
+                                        Replacement By MGC
+                                    </button>
+
+                                    <button
+                                        *ngIf="!(row.repairStatus == 'Delivery note Generated' || row.repairStatus == 'Delivered')"
+                                        (click)="modalOpenReplacementByZebraForm(modalReplacementByZebraForm, row.id)"
+                                        ngbDropdownItem>
+                                        <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span>
+                                        Replacement By Zebra
+                                    </button>
+                                    <button (click)="getUpdatedContractStatus(this.row.id)" ngbDropdownItem>
+                                        <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span>
+                                        Check Contract Status
+                                    </button>
+                                    <button *ngIf="!(row.rmaNumber== null)"
+                                        (click)="getUpdatedRMAStatus(this.row.rmaNumber, this.row.rmaEmailAddress)"
+                                        ngbDropdownItem>
+                                        <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span>
+                                        Check RMA Status
+                                    </button>
+                                    <button
+                                        *ngIf="!(row.repairStatus == 'Delivery note Generated' || row.repairStatus == 'Delivered')"
+                                        (click)="updateFaultCaseStatus(row.id,'Returned')" ngbDropdownItem>
+                                        <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span>
+                                        Returned (Only Unrepaired)
+                                    </button>
+                                    <button
+                                        *ngIf="!(row.repairStatus == 'Delivery note Generated' || row.repairStatus == 'Delivered')"
+                                        (click)="updateFaultCaseStatus(row.id,'Quote Sent')" ngbDropdownItem>
+                                        <span [data-feather]="'send'" [size]="16" [class]="'mr-50'"></span>
+                                        Quote Sent
+                                    </button>
+
+                                    <!-- <button  *ngIf="(row.repairStatus == 'Delivery note Generated')"
+                                        (click)="updateFaultCaseStatus(row.id,'Delivered')" ngbDropdownItem>
+                                        <span [data-feather]="'file-text'" [size]="16" [class]="'mr-50'"></span>
+                                        Delivered
+                                    </button> -->
+
+                                    <!-- <button routerLink="/apps/user/user-edit/{{ row.id }}" ngbDropdownItem>
+                                        <span [data-feather]="'edit'" [size]="16" [class]="'mr-50'"></span>
+                                        Edit
+                                    </button>
+                                    <button href="javascript:;" ngbDropdownItem><span [data-feather]="'trash'"
+                                            [size]="16" [class]="'mr-50'">
+                                        </span>
+                                        Delete
+                                    </button> -->
+                                </div>
+                            </div>
+
+
+
+                            <!-- <div class="avatar avatar-status bg-light-danger">
+                                <ng-template #tipDeleteContent><span>{{ row.id }}<br />
+                                        <span class="font-weight-bold">Delete
+                                        </span>
+                                    </span>
+                                </ng-template>
+                                <span class="avatar-content" popoverTitle="Delete" placement="top"
+                                    [ngbPopover]="tipDeleteContent" triggers="mouseenter:mouseleave" container="body">
+                                    <i class="feather avatar-icon font-medium-1 icon-trash"></i></span>
+                            </div> -->
+
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </core-card>
+        </section>
+
+    </div>
+
+    <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="new-user-sidebar"
+        overlayClass="modal-backdrop">
+        <app-new-fault-sidebar></app-new-fault-sidebar>
+    </core-sidebar>
+
+    <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="edit-fault-sidebar"
+        overlayClass="modal-backdrop">
+        <app-edit-fault-sidebar [editRepairDevice]="(repairDevice)" [emailDPdata]="(emailDPdata)"
+            [collectionDPdata]="(collectionDPdata)"></app-edit-fault-sidebar>
+    </core-sidebar>
+
+    <div class="login-form">
+        <!-- Button trigger modal -->
+        <!-- <button type="button"  class="btn btn-outline-primary" rippleEffect>
+            Login Form
+        </button> -->
+
+        <!-- Modal -->
+        <ng-template #modalForm let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel1">Provide RMA Number</h4>
+                <!-- <h5>This will update status and other information of all the serial number includes in the RMA</h5> -->
+                <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" tabindex="0" ngbAutofocus>
+                <form action="#">
+                    <label>RMA Number: </label>
+                    <div class="form-group">
+                        <input type="text" placeholder="RMA NUMBER XXXXXXX"
+                            [(ngModel)]="rmaDetailUpdaterModel.rmaNumber" class="form-control" name="RmaUpdater" />
+                    </div>
+
+                    <label>Email Address: </label>
+                    <div class="form-group">
+                        <input type="text" placeholder="vikas@menagalaxy.com"
+                            [(ngModel)]="rmaDetailUpdaterModel.emailAddress" class="form-control" name="emailAddress" />
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="updateorAddRMANumber()" rippleEffect>
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    <span *ngIf="loading == false">Update</span>
+                    <span *ngIf="loading">Updating</span>
+                </button>
+                <!-- (click)="modal.close('Accept click')" -->
+            </div>
+        </ng-template>
+        <!-- / Modal -->
+    </div>
+
+    <div class="login-form">
+        <!-- Button trigger modal -->
+        <!-- <button type="button"  class="btn btn-outline-primary" rippleEffect>
+                Login Form
+            </button> -->
+
+        <!-- Modal -->
+        <ng-template #modalReplacementByUsForm let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel1">Provide Replacement Details (By MGC)</h4>
+                <!-- <h5>This will update status and other information of all the serial number includes in the RMA</h5> -->
+                <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" tabindex="0" ngbAutofocus>
+                <form action="#">
+                    <label>Replacement Serial Number: </label>
+                    <div class="form-group">
+                        <input type="text" placeholder="XXXXXXX"
+                            [(ngModel)]="replacementByUsCaseStatus.replacementSerialNoByUs" class="form-control"
+                            name="RmaUpdater" />
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary"
+                    (click)="updateReplacementSerialByUs('Replacement by MGC')" rippleEffect>
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    <span *ngIf="loading == false">Update</span>
+                    <span *ngIf="loading">Updating</span>
+                </button>
+                <!-- (click)="modal.close('Accept click')" -->
+            </div>
+        </ng-template>
+        <!-- / Modal -->
+    </div>
+
+    <div class="login-form">
+        <!-- Button trigger modal -->
+        <!-- <button type="button"  class="btn btn-outline-primary" rippleEffect>
+                    Login Form
+                </button> -->
+
+        <!-- Modal -->
+        <ng-template #modalReplacementByZebraForm let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel1">Provide Replacement Details (By Zebra)</h4>
+                <!-- <h5>This will update status and other information of all the serial number includes in the RMA</h5> -->
+                <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" tabindex="0" ngbAutofocus>
+                <form action="#">
+                    <label>Replacement Serial Number: </label>
+                    <div class="form-group">
+                        <input type="text" placeholder="XXXXXXX"
+                            [(ngModel)]="replacementByZebraCaseStatus.replacementSerialNo" class="form-control"
+                            name="RmaUpdater" />
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary"
+                    (click)="updateReplacementSerialByZebra('Replacement by Zebra')" rippleEffect>
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    <span *ngIf="loading == false">Update</span>
+                    <span *ngIf="loading">Updating</span>
+                </button>
+                <!-- (click)="modal.close('Accept click')" -->
+            </div>
+        </ng-template>
+        <!-- / Modal -->
+    </div>
+
+</div>

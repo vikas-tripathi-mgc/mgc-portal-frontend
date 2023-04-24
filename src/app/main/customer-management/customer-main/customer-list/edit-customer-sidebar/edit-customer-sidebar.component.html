@@ -1,0 +1,62 @@
+<div class="slideout-content">
+    <!-- Modal to add new user starts-->
+    <div class="modalsd modal-slide-in sdfade new-user-modal" id="modals-slide-in">
+        <div class="modal-dialog">
+            <form class="edit-new-user modal-content pt-0" (ngSubmit)="(editCaseForm.form.valid)"
+                #editCaseForm="ngForm">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="toggleSidebar('edit-user-sidebar')">
+                    ×
+                </button>
+                <div class="modal-header mb-1">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Customer</h5>
+                </div>
+                <div class="modal-body flex-grow-1">
+                    <div class="form-group">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" [(ngModel)]="item.customerName" class="form-control" name="customerName"
+                            placeholder="Enter Contact Person Name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Customer Email</label>
+                        <input type="text" [(ngModel)]="item.customerEmail" class="form-control" name="customerEmail"
+                            placeholder="Enter Contact Person Email" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="companyCode">Company Code</label>
+                        <input type="text" [(ngModel)]="item.companyCode" class="form-control" name="companyCode"
+                            placeholder="Enter Company Code" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="companyName">Company Name</label>
+                        <input type="text" [(ngModel)]="item.companyName" class="form-control" name="companyName"
+                            placeholder="Enter Company Name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="companyAddress1">Company Address Line 1</label>
+                        <input type="text" [(ngModel)]="item.deliveryAddressLine1" class="form-control"
+                            name="companyAddress1" placeholder="Enter Company Address Line 1" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="companyAddress2">Company Address Line 2</label>
+                        <input type="text" [(ngModel)]="item.deliveryAddressLine2" class="form-control"
+                            name="companyAddress2" placeholder="Enter Company Address Line 2" />
+                    </div>
+                    <div class="form-group">
+                        <label for="companyAddress3">Company Address Line 3</label>
+                        <input type="text" [(ngModel)]="item.deliveryAddressLine3" class="form-control"
+                            name="companyAddress3" placeholder="Enter Company Address Line 3" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mr-1" (click)="submit(editCaseForm)"
+                        rippleEffect>Update</button>
+                    <button type="reset" class="btn btn-outline-secondary" (click)="toggleSidebar('edit-user-sidebar')"
+                        rippleEffect>
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal to add new user Ends-->
+</div>
