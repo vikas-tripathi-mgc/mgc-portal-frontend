@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   hmr: false,
   // apiUrl: 'https://stage.mgc.ae:8080',
-  apiUrl: 'http://192.168.0.5:8080'
+  apiUrl: 'http://192.168.0.5:8081'
 };
 
 /*
