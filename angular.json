@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "baseHref": "/mgcportal/",
+            "baseHref": "/",
             "allowedCommonJsDependencies": [
               "hammerjs",
               "node-waves",
